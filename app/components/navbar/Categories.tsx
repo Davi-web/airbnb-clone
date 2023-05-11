@@ -110,6 +110,7 @@ const Categories = () => {
           <CategoryBox
             key={item.label}
             label={item.label}
+            description={item.description}
             selected={item.label === category}
             icon={item.icon}
           />
