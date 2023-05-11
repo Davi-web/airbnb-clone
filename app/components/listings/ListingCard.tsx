@@ -9,11 +9,12 @@ import { format } from 'date-fns';
 import useCountries from '@/app/hooks/useCountries';
 
 interface ListingCardProps {
+  key?: string;
   listing: Listing;
-  reservation: Reservation;
+  reservation?: Reservation;
   onAction?: (id: string) => void;
   disabled?: boolean;
-  actionLabel: string;
+  actionLabel?: string;
   actionId?: string;
   currentUser?: SafeUser | null;
 }
