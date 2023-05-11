@@ -4,7 +4,7 @@ import type { Listing, Reservation } from '@prisma/client';
 import Image from 'next/image';
 import { SafeUser } from '@/app/types';
 import { useRouter } from 'next/navigation';
-import { format } from 'date-fns ';
+import { format } from 'date-fns';
 
 import useCountries from '@/app/hooks/useCountries';
 
