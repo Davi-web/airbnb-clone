@@ -1,3 +1,4 @@
+'use client';
 import useCountries from '@/app/hooks/useCountries';
 import { FC } from 'react';
 import Select from 'react-select';
