@@ -31,7 +31,6 @@ export default async function Home() {
             <ListingCard
               key={listing.id}
               listing={listing}
-              onAction={() => {}}
               currentUser={currentUser}
             />
           ))}
