@@ -1,16 +1,18 @@
 'use client';
 import React, { FC, useCallback, useMemo } from 'react';
-import type { Listing, Reservation } from '@prisma/client';
+import type { Reservation } from '@prisma/client';
 import Image from 'next/image';
-import { SafeUser } from '@/app/types';
+import { SafeListing, SafeUser } from '@/app/types';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
+import HeartButton from '../HeartButton';
 
 import useCountries from '@/app/hooks/useCountries';
+import Button from '../Button';
 
 interface ListingCardProps {
   key?: string;
-  listing: Listing;
+  listing: SafeListing;
   reservation?: Reservation;
   onAction?: (id: string) => void;
   disabled?: boolean;
@@ -53,20 +55,43 @@ const ListingCard: FC<ListingCardProps> = ({
     const end = new Date(reservation.endDate);
     return `${format(start, 'PP')} - ${format(end, 'PP')}`;
   }, [reservation]);
+
   return (
     <div
+      onClick={() => router.push(`/listings/${listing.id}`)}
       key={listing.id}
-      className="relative w-full h-80 rounded-lg overflow-hidden"
+      className="col-span-1 cursor-pointer group"
     >
-      <Image
-        key={listing.id}
-        src={listing.imageSrc}
-        alt={listing.title}
-        layout="fill"
-        objectFit="cover"
-      />
-      <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-4">
-        <div className="text-white font-semibold text-lg">{listing.title}</div>
+      <div className="flex flex-col gap-2 w-full">
+        <div className="aspect-square w-full relative overflow-hidden rounded-xl">
+          <Image
+            src={listing.imageSrc}
+            alt={listing.title}
+            fill
+            className="object-cover h-full w-full group-hover:scale-110 transition"
+          />
+          <div className="absolute top-3 right-3">
+            <HeartButton listingId={listing.id} currentUser={currentUser} />
+          </div>
+        </div>
+        <div className="font-semibold text-lg">
+          {location?.region}, {location?.label}
+        </div>
+        <div className="font-light text-neutral-500">
+          {reservationDate || listing.category}
+        </div>
+        <div className="flex flex-row items-center gap-1">
+          <div className="font-semibold">$ {price}</div>
+          {!reservation && <div className="font-light">night</div>}
+        </div>
+        {onAction && actionLabel && (
+          <Button
+            onClick={handleCancel}
+            small
+            disabled={disabled}
+            label={actionLabel}
+          />
+        )}
       </div>
     </div>
   );
