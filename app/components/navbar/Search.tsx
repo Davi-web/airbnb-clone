@@ -1,8 +1,51 @@
 'use client';
+import useCountries from '@/app/hooks/useCountries';
+import useSearchModal from '@/app/hooks/useSearchModel';
+import { useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
 import { BiSearch } from 'react-icons/bi';
+import format from 'date-fns/format';
+import { differenceInDays } from 'date-fns';
+
 const Search = () => {
+  const searchModal = useSearchModal();
+  const params = useSearchParams();
+  const { getCountryByValue } = useCountries();
+  const locationValue = params?.get('locationValue');
+  const startDate = params?.get('startDate');
+  const endDate = params?.get('endDate');
+  const guestCount = params?.get('guestCount');
+
+  const locationLabel = useMemo(() => {
+    if (locationValue) {
+      return getCountryByValue(locationValue as string)?.label;
+    }
+    return 'Anywhere';
+  }, [getCountryByValue, locationValue]);
+
+  const durationLabel = useMemo(() => {
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      let diff = differenceInDays(end, start);
+      if (diff === 0) {
+        diff = 1;
+      }
+      return `${diff} Day${diff > 1 ? 's' : ''}`;
+    }
+    return 'Any Week';
+  }, [startDate, endDate]);
+
+  const guestLabel = useMemo(() => {
+    if (guestCount) {
+      return `${guestCount} Guest${+guestCount > 1 ? 's' : ''}`;
+    }
+    return 'Add Guests';
+  }, [guestCount]);
+
   return (
     <div
+      onClick={searchModal.onOpen}
       className="
         border-[1px]
         w-full
@@ -30,7 +73,7 @@ const Search = () => {
             px-6
             "
         >
-          Anywhere
+          {locationLabel}
         </div>
         <div
           className="
@@ -44,7 +87,7 @@ const Search = () => {
             text-center
             "
         >
-          Any Week
+          {durationLabel}
         </div>
         <div
           className="
@@ -58,7 +101,7 @@ const Search = () => {
             gap-3
             "
         >
-          <div className="hidden sm:block">Add Guests</div>
+          <div className="hidden sm:block">{guestLabel}</div>
           <div className="p-2 bg-rose-500 rounded-full text-white">
             <BiSearch size={18} />
           </div>

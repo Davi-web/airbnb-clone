@@ -12,7 +12,7 @@ export type CountrySelectValue = {
 };
 
 interface LocationInputProps {
-  value: CountrySelectValue;
+  value?: CountrySelectValue;
   onChange: (value: CountrySelectValue) => void;
 }
 
